@@ -1,0 +1,23 @@
+
+
+export TOKEN=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU0ODc5MTc0Nn0.NCbi7-uq-HYWIG20ktQ3AwuoFe4J__1tzcUT9GOFcAOxEOp79sl6B5SKEI3dQkGckPbTX4n8KHrwwCyDK-Qjhg
+
+curl http://localhost:8080/tasks
+
+curl -H "Content-Type: application/json" -X POST -d '{
+    "username": "admin",
+    "password": "password"
+}' http://localhost:8080/users/sign-up
+
+curl -i -H "Content-Type: application/json" -X POST -d '{
+    "username": "admin",
+    "password": "password"
+}' http://localhost:8080/login
+
+curl -H "Content-Type: application/json" \
+-H "Authorization: Bearer $TOKEN" \
+-X POST -d '{
+    "description": "Buy watermelon"
+}'  http://localhost:8080/tasks
+
+curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/tasks
