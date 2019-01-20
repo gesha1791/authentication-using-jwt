@@ -1,10 +1,14 @@
 package com.auth0.samples.authapi.springbootauthupdated.user;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.Collections.emptyList;
 
@@ -22,7 +26,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (applicationUser == null) {
             throw new UsernameNotFoundException(username);
         }
-        // TODO add GrantedAuthority instead of empty list
-        return new User(applicationUser.getUsername(), applicationUser.getPassword(), emptyList());
+        return new User(applicationUser.getUsername(), applicationUser.getPassword(), getAuthority(applicationUser));
     }
+
+    private Set<SimpleGrantedAuthority> getAuthority(ApplicationUser applicationUser) {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        applicationUser.getRoles().forEach(role -> {
+            //authorities.add(new SimpleGrantedAuthority(role.getName()));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+        });
+        return authorities;
+        //return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    }
+
 }

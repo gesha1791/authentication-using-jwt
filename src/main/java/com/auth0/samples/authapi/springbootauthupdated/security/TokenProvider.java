@@ -79,15 +79,11 @@ public class TokenProvider {
 
         final Claims claims = claimsJws.getBody();
 
-        // TODO enable after adding roles
-//        final Collection<? extends GrantedAuthority> authorities =
-//            Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-//                .map(SimpleGrantedAuthority::new)
-//                .collect(Collectors.toList());
-//        return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(userDetails, "", Collections.emptyList());
-
+        final Collection<? extends GrantedAuthority> authorities =
+            Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
     }
 
 }
