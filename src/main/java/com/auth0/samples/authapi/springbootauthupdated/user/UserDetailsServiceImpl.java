@@ -22,6 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (applicationUser == null) {
             throw new UsernameNotFoundException(username);
         }
+        // TODO add GrantedAuthority instead of empty list
         return new User(applicationUser.getUsername(), applicationUser.getPassword(), emptyList());
     }
 }

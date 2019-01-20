@@ -17,12 +17,15 @@ import static com.auth0.samples.authapi.springbootauthupdated.security.SecurityC
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
-    private UserDetailsServiceImpl userDetailsService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public WebSecurity(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    private final UserDetailsServiceImpl userDetailsService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final TokenProvider jwtTokenUtil;
+
+    public WebSecurity(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, TokenProvider jwtTokenUtil) {
         this.userDetailsService = userDetailsService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
     @Override
@@ -31,8 +34,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
             .anyRequest().authenticated()
             .and()
-            .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-            .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+            .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtTokenUtil))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtTokenUtil, userDetailsService))
             // this disables session creation on Spring Security
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
